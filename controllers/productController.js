@@ -42,7 +42,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     nex(new AppError("Product can not be created", 424));
   }
   return res.status(201).send({
-    status: "success",
+    status: "OK",
     product: newProduct,
   });
 });
@@ -54,7 +54,7 @@ exports.readAllProducts = catchAsync(async (req, res, next) => {
   if (!products) {
     return next(new AppError("Unable to find products", 424));
   } else {
-    return res.status(200).send({ message: "success", products });
+    return res.status(200).send({ message: "OK", products });
   }
 });
 
@@ -69,7 +69,7 @@ exports.readProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     return next(new AppError("Unable to find this product", 404));
   } else {
-    return res.status(200).send({ message: "success", product });
+    return res.status(200).send({ message: "OK", product });
   }
 });
 
@@ -80,8 +80,6 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     return next(new AppError("Unable to find this product", 404));
   } else {
-    return res
-      .status(200)
-      .send({ status: "success", message: "product deleted" });
+    return res.status(200).send({ status: "OK", message: "product deleted" });
   }
 });

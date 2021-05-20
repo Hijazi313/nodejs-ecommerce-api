@@ -19,7 +19,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
       .status(424)
       .send({ status: "failed", message: "The category cannot be created" });
   }
-  return res.status(201).send({ status: "success", data: category });
+  return res.status(201).send({ status: "OK", data: category });
 });
 
 //
@@ -31,16 +31,14 @@ exports.deleteCategory = catchAsync(async (req, res, next) => {
   if (!category) {
     return next(new AppError("unable to find this category", 404));
   }
-  return res
-    .status(204)
-    .json({ status: "success", message: "Category daleted" });
+  return res.status(204).json({ status: "OK", message: "Category daleted" });
 });
 
 // GET ALL CATEGORIES
 exports.getCategories = catchAsync(async (req, res, next) => {
   const category = await Category.find();
 
-  return res.status(200).send({ status: "success", data: category });
+  return res.status(200).send({ status: "OK", data: category });
 });
 
 exports.getCategory = catchAsync(async (req, res, next) => {
@@ -52,5 +50,5 @@ exports.getCategory = catchAsync(async (req, res, next) => {
   if (!category) {
     return next(new AppError("unable to find this category", 404));
   }
-  return res.status(200).send({ status: "success", data: category });
+  return res.status(200).send({ status: "OK", data: category });
 });

@@ -1,4 +1,6 @@
 const express = require("express");
+const { protect } = require("../controllers/authController");
+
 const {
   createProduct,
   readAllProducts,
@@ -9,7 +11,7 @@ const idCheck = require("../utils/idCheck");
 const router = express.Router();
 
 // Create a Product
-router.route("/").post(createProduct).get(readAllProducts);
+router.route("/").post(protect, createProduct).get(readAllProducts);
 
 // TODO: Relateg Products  route
 // select only title shortDescription _id and image

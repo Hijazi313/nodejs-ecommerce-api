@@ -7,6 +7,8 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const productsRoute = require("./routes/productsRoute");
 const categoryRoute = require("./routes/categoryRoute");
+const userRoute = require("./routes/userRoute");
+
 const app = express();
 
 mongoose
@@ -18,12 +20,14 @@ mongoose
   })
   .then(() => console.log("Database connection is ready..."))
   .catch((err) => console.error(err));
+
 app.use(cors());
 app.use(morgan("tiny"));
 app.use(express.json());
 
 app.use("/products", productsRoute);
 app.use("/categories", categoryRoute);
+app.use("/users", userRoute);
 
 // 404 request
 app.all("*", (req, res, next) => {

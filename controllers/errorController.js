@@ -11,6 +11,18 @@ const handleDuplicateFieldsDb = (err) => {
   const message = `Duplicate field ${key}: ${value}.`;
   return new AppError(message, 400);
 };
+
+const handleTokenExpiredError = () =>
+  new AppError("Your Token has Expired, Please Login again.", 401);
+const handleValidationError = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+  console.log("errors", errors.join(". "));
+
+  return new AppError(`Invalid input data. ${errors.join(". ")}`, 400);
+};
+
+const handleJsonWebTokenError = (err) =>
+  new AppError("Invalid Token Please Login again", 401);
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -21,6 +33,7 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProduction = (err, res) => {
+  // console.log("op", err);
   // Operational error, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode).json({
@@ -41,14 +54,22 @@ const sendErrorProduction = (err, res) => {
   }
 };
 module.exports = (err, req, res, next) => {
+  console.log(err);
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
   if (process.env.NODE_ENV === "production") {
-    let error = { ...err };
-    if (error.name === "CastError" || error.kind === "ObjectId")
+    let error = { message: err.message, ...err };
+    if (err.name === "CastError" || error.kind === "ObjectId")
       error = handleCastError(error);
-    if (error.code === 11000) error = handleDuplicateFieldsDb(error, res);
+    if (err.code === 11000) error = handleDuplicateFieldsDb(error, res);
+
+    if (err.name === "ValidationError") error = handleValidationError(error);
+    if (err.name === "JsonWebTokenError")
+      error = handleJsonWebTokenError(error);
+    if (err.name === "TokenExpiredError")
+      error = handleTokenExpiredError(error);
+
     sendErrorProduction(error, res);
   } else {
     sendErrorDev(err, res);

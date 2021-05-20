@@ -8,7 +8,7 @@ beforeEach(async () => {
 
 test("Should create a new Product", async () => {
   await request(app)
-    .post("/")
+    .post("/products")
     .send({
       title: "first product test",
       description: "this is description",

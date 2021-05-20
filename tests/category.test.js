@@ -16,6 +16,7 @@ test("Should create a new Category", async () => {
     })
     .expect(201);
 });
+
 test("Should Not  create a new Category without name field", async () => {
   await request(app)
     .post("/categories")
@@ -25,6 +26,7 @@ test("Should Not  create a new Category without name field", async () => {
     })
     .expect(500);
 });
+
 test("Should get  Categories", async () => {
   await request(app).get("/categories").expect(200);
 });

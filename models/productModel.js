@@ -3,7 +3,7 @@ const productSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Product title is required"],
     },
     shortDescription: {
       type: String,
