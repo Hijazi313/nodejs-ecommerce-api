@@ -14,11 +14,15 @@
 ### Data Sanitization
   It will help us clean all the data that comes into the application from malicious code.  I am doing data sanitization against NoSql query injection and XSS.
 
+  ### JWT via Cookie
+  Json web token should be stored in a secure HTTP-only cookie. Here i am sending JWT as a cookie so that browser can then  save it in a more  secure way 
+
   ## Environment Variables
   ```bash
   
   MONGO_URI
-  JWT_SECRET 
+  JWT_SECRET
+  JWT_COOKIE_EXPIRES_IN
   
   ```
 ## Run The Application
