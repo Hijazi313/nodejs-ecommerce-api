@@ -7,6 +7,7 @@ const {
   login,
   forgotPassword,
   resetPassword,
+  updatePassword,
 } = require("../controllers/authController");
 const { myProfile } = require("../controllers/userController");
 
@@ -17,6 +18,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/forgotpassword", forgotPassword);
 router.patch("/resetpassword/:token", resetPassword);
+router.patch("/updatepassword", protect, updatePassword);
 
 // @GET THE PROFILE OF THE CURRENT USER
 // IF the user is logged in only then he can access his profile

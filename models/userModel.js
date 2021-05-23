@@ -63,7 +63,8 @@ userSchema.virtual("id").get(function () {
 // MONGOOSE MIDDLEWARES
 
 //  This Pre save middlewares works on creating and saving a document;
-// It works on current document
+//  These dont work on updating documents e.g findByIdAndUpdate()
+//  It works on current document
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
