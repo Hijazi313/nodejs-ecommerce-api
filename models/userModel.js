@@ -42,6 +42,11 @@ const userSchema = new Schema(
     passwordChangedAt: Date,
     passwordResetToken: { type: String },
     passwordResetExpires: { type: Date },
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -75,11 +80,14 @@ userSchema.pre("save", async function (next) {
 
 userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) return next();
-
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
-
+userSchema.pre(/^find/, function (next) {
+  // This Points to current query
+  this.find({ active: { $ne: false } });
+  next();
+});
 // Instance Method
 // they are available on all documents of a collection
 userSchema.methods.correctPassword = async function (

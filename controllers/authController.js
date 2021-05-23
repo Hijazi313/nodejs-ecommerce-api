@@ -128,6 +128,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // Get User from collection
   const user = await User.findById(req.user._id).select("+password");
+  if (!user) return next(new AppError("User does not exist", 404));
 
   // 2) Check if Posted current password is correct
   const isCorrectPassword = await user.correctPassword(password, user.password);
