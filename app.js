@@ -50,9 +50,9 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Application Route handlers
-app.use("/products", productsRoute);
-app.use("/categories", categoryRoute);
-app.use("/users", userRoute);
+app.use("/api/v1/products", productsRoute);
+app.use("/api/v1/categories", categoryRoute);
+app.use("/api/v1/users", userRoute);
 
 // 404 request
 app.all("*", (req, res, next) => {
