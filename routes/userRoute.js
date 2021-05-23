@@ -1,16 +1,27 @@
 const express = require("express");
-const { signup, login } = require("../controllers/authController");
+// Custom Route Protection middleware
+const protect = require("../middlewares/protect");
+
+const {
+  signup,
+  login,
+  forgotPassword,
+  resetPassword,
+} = require("../controllers/authController");
+const { myProfile } = require("../controllers/userController");
+
 const router = express.Router();
 
 // Signup user
 router.post("/signup", signup);
 router.post("/login", login);
-// Create a Product
-// router.route("/").post(createProduct).get(readAllProducts);
+router.post("/forgotpassword", forgotPassword);
+router.patch("/resetpassword/:token", resetPassword);
+
+// @GET THE PROFILE OF THE CURRENT USER
+// IF the user is logged in only then he can access his profile
+router.get("/me", protect, myProfile);
 
 // select only title shortDescription _id and image
-
-// // GET || DELETE  A SINGLE PRODUCT
-// router.route("/:id").get(readProduct).delete(deleteProduct);
 
 module.exports = router;
