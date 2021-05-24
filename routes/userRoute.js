@@ -13,6 +13,7 @@ const {
   myProfile,
   deleteMe,
   getAllUsers,
+  updateMe,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -26,10 +27,14 @@ router.patch("/resetpassword/:token", resetPassword);
 router.patch("/updatepassword", protect, updatePassword);
 
 // @GET THE PROFILE OF THE CURRENT USER
-// IF the user is logged in only then he can access his profile
-router.route("/me").get(protect, myProfile).delete(protect, deleteMe);
+// IF the user is logged in only then he can access his profile and perform different actions
+router
+  .route("/me")
+  .get(protect, myProfile)
+  .patch(protect, updateMe)
+  .delete(protect, deleteMe);
 
-router.route("/").get(getAllUsers);
+router.route("/").get(protect, getAllUsers);
 // select only title shortDescription _id and image
 
 module.exports = router;
