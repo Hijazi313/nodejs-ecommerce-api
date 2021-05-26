@@ -52,7 +52,22 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 // READ ALL PRODUCTS
 
 exports.readAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find();
+  // 1) Filtering
+  // create a shallow copy of the req.query
+  const queryObj = { ...req.query };
+  const excludeFields = ["page", "sort", "limit", "fields"];
+  // Remove unwanted fields from queryObj
+  excludeFields.forEach((field) => delete queryObj[field]);
+
+  // 2) Advance Filtering
+  let queryStr = JSON.stringify(queryObj);
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+  // Build Query
+  const query = Product.find(JSON.parse(queryStr));
+  // EXECUTE QUERY
+  const products = await query;
+
   if (!products) {
     return next(new AppError("Unable to find products", 424));
   } else {

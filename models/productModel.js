@@ -44,7 +44,7 @@ const productSchema = new Schema(
       type: Number,
       default: 0,
     },
-    tags: [String],
+    tags: [{ type: String }],
     isFeatured: {
       type: Boolean,
       default: false,
