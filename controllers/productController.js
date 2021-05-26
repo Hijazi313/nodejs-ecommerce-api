@@ -43,7 +43,9 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   }
   return res.status(201).send({
     status: "OK",
-    product: newProduct,
+    data: {
+      product: newProduct,
+    },
   });
 });
 
@@ -54,7 +56,12 @@ exports.readAllProducts = catchAsync(async (req, res, next) => {
   if (!products) {
     return next(new AppError("Unable to find products", 424));
   } else {
-    return res.status(200).send({ message: "OK", products });
+    return res.status(200).send({
+      message: "OK",
+      data: {
+        products,
+      },
+    });
   }
 });
 
@@ -69,9 +76,16 @@ exports.readProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     return next(new AppError("Unable to find this product", 404));
   } else {
-    return res.status(200).send({ message: "OK", product });
+    return res.status(200).send({
+      message: "OK",
+      data: {
+        product,
+      },
+    });
   }
 });
+
+// Delete Product
 
 exports.deleteProduct = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -80,6 +94,21 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     return next(new AppError("Unable to find this product", 404));
   } else {
-    return res.status(200).send({ status: "OK", message: "product deleted" });
+    return res.status(200).send({ status: "OK" });
   }
+});
+
+// Update Product
+exports.updateProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!product) return next(new AppError("This Product does not exist", 404));
+  return res.status(200).json({
+    status: "OK",
+    data: {
+      product,
+    },
+  });
 });

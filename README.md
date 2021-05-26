@@ -18,7 +18,7 @@
   Json web token should be stored in a secure HTTP-only cookie. Here i am sending JWT as a cookie so that browser can then  save it in a more  secure way 
 
   ###  Parameter Pollution
-  Prevent parameter pollution.
+  Prevent parameter pollution on un some types.
 
   ## Environment Variables
   ```bash

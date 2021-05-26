@@ -1,6 +1,8 @@
 process.on("uncaughtException", (err) => {
   console.log(`UNCAUGHT EXCEPTION!  Shutting Down....`);
-  console.error(err.name, err.message);
+  console.error("Error Name => ", err.name);
+  console.error("Error Message => ", err.message);
+  console.error("Error Stack => ", err.stack);
   //   Close the process
   process.exit(1);
 });

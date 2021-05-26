@@ -8,9 +8,11 @@ const productSchema = new Schema(
     shortDescription: {
       type: String,
       required: [true, "Short Description is Required"],
+      trim: true,
     },
     description: {
       type: String,
+      trim: true,
       required: [true, " Description is Required"],
     },
     price: {
@@ -25,15 +27,15 @@ const productSchema = new Schema(
     image: {
       type: String,
     },
-    images: [
-      {
-        url: {
-          type: String,
-          required: true,
-        },
-        alt: String,
-      },
-    ],
+    images: [String],
+    ratingsAverage: {
+      type: Number,
+      default: 5.0,
+    },
+    totalRatings: {
+      type: Number,
+      default: 0,
+    },
     brand: {
       type: String,
       default: "not specified",
@@ -42,6 +44,7 @@ const productSchema = new Schema(
       type: Number,
       default: 0,
     },
+    tags: [String],
     isFeatured: {
       type: Boolean,
       default: false,

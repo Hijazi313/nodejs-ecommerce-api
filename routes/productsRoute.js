@@ -6,6 +6,7 @@ const {
   readAllProducts,
   readProduct,
   deleteProduct,
+  updateProduct,
 } = require("../controllers/productController");
 const idCheck = require("../utils/idCheck");
 const router = express.Router();
@@ -20,6 +21,10 @@ router.route("/").post(protect, createProduct).get(readAllProducts);
 router.param("id", idCheck);
 
 // GET || DELETE  A SINGLE PRODUCT
-router.route("/:id").get(readProduct).delete(deleteProduct);
+router
+  .route("/:id")
+  .get(readProduct)
+  .delete(deleteProduct)
+  .patch(updateProduct);
 
 module.exports = router;
