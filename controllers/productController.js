@@ -82,6 +82,18 @@ exports.readAllProducts = catchAsync(async (req, res, next) => {
     query = query.select("-__v -updatedAt");
   }
 
+  // 4) Pagination
+  const page = req.query.page * 1 || 1;
+  const limit = req.query.limit * 1 || 100;
+  let skip = (page - 1) * limit;
+  query = query.skip(skip).limit(limit);
+
+  if (req.query.page) {
+    const numOfProducts = await Product.countDocuments();
+    if (skip >= numOfProducts)
+      return next(new AppError("This page does not exist", 404));
+  }
+
   // EXECUTE QUERY
   const products = await query;
 
