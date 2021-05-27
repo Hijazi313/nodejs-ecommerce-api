@@ -44,7 +44,11 @@ const productSchema = new Schema(
       type: Number,
       default: 0,
     },
-    tags: [{ type: String }],
+    tags: [String],
+    views: {
+      type: Number,
+      default: 0,
+    },
     isFeatured: {
       type: Boolean,
       default: false,
@@ -62,6 +66,10 @@ productSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 
+productSchema.methods.increaseView = function () {
+  this.views += 1;
+  return;
+};
 const Product = model("Product", productSchema);
 
 module.exports = Product;

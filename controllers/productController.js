@@ -120,6 +120,10 @@ exports.readProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     return next(new AppError("Unable to find this product", 404));
   } else {
+    // Increase Signle product view
+    await product.increaseView();
+    product.save({ validateBeforeSave: false });
+
     return res.status(200).send({
       message: "OK",
       data: {
@@ -155,4 +159,11 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
       product,
     },
   });
+});
+
+// Aliasing for most viewd Products
+exports.aliasMostViewd = catchAsync(async (req, res, next) => {
+  req.query.limit = "3";
+  req.query.sort = "-views";
+  next();
 });

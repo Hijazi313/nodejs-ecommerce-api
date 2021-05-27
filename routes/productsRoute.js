@@ -7,12 +7,15 @@ const {
   readProduct,
   deleteProduct,
   updateProduct,
+  aliasMostViewd,
 } = require("../controllers/productController");
 const idCheck = require("../utils/idCheck");
 const router = express.Router();
 
 // Create a Product
 router.route("/").post(protect, createProduct).get(readAllProducts);
+
+router.route("/most-viewed").get(aliasMostViewd, readAllProducts);
 
 // TODO: Relateg Products  route
 // select only title shortDescription _id and image
