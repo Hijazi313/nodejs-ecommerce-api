@@ -73,6 +73,15 @@ exports.readAllProducts = catchAsync(async (req, res, next) => {
   } else {
     query = query.sort("-createdAt");
   }
+
+  // 3) Field Limiting or Also known as Projecting
+  if (req.query.fields) {
+    const fields = req.query.fields.split(",").join(" ");
+    query = query.select(fields);
+  } else {
+    query = query.select("-__v -updatedAt");
+  }
+
   // EXECUTE QUERY
   const products = await query;
 
