@@ -1,53 +1,31 @@
 const { Schema, model } = require("mongoose");
+const Product = require("./productModel");
 
 // UserID
 // ProductIDs
 const reviewSchema = new Schema(
   {
-    title: {
+    review: {
       type: String,
-      required: [true, "Product title is required"],
     },
-    shortDescription: {
-      type: String,
-      required: [true, "Short Description is Required"],
-    },
-    description: {
-      type: String,
-      required: [true, " Description is Required"],
-    },
-    price: {
+    rating: {
       type: Number,
-      required: [true, "Price is Required"],
+      min: 1,
+      max: 5,
     },
-    category: {
+    product: {
       type: Schema.Types.ObjectId,
-      ref: "Category",
-      required: [true, "Category is Required"],
+      ref: "Product",
+      required: [true, " Review must belong to a Product"],
     },
-    image: {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Review must belong to a User"],
+    },
+    userName: {
       type: String,
-    },
-    images: [
-      {
-        url: {
-          type: String,
-          required: true,
-        },
-        alt: String,
-      },
-    ],
-    brand: {
-      type: String,
-      default: "not specified",
-    },
-    countInStock: {
-      type: Number,
-      default: 0,
-    },
-    isFeatured: {
-      type: Boolean,
-      default: false,
+      required: [true, " Review must contain a userName"],
     },
   },
   {
@@ -58,8 +36,56 @@ const reviewSchema = new Schema(
   }
 );
 
-productSchema.virtual("id").get(function () {
-  return this._id.toHexString();
+// reviewSchema.virtual("id").get(function () {
+//   return this._id.toHexString();
+// });
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "product",
+    select: "title _id",
+  }).populate({
+    path: "user",
+    select: "fullName _id",
+  });
+  next();
+});
+
+reviewSchema.statics.calcAverageRatings = async function (productId) {
+  const stats = await this.aggregate([
+    {
+      $match: { product: productId },
+    },
+    {
+      $group: {
+        _id: "$product",
+        nRating: { $sum: 1 },
+        avgRating: { $avg: "$rating" },
+      },
+    },
+  ]);
+  if (stats.length > 0) {
+    await Product.findByIdAndUpdate(productId, {
+      ratingsAverage: stats[0].avgRating,
+      totalRatings: stats[0].nRating,
+    });
+  } else {
+    await Product.findByIdAndUpdate(productId, {
+      ratingsAverage: 5,
+      totalRatings: 0,
+    });
+  }
+};
+reviewSchema.post("save", function () {
+  this.constructor.calcAverageRatings(this.product);
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.r = await this.findOne();
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.r.constructor.calcAverageRatings(this.r.product._id);
 });
 
 const Review = model("Review", reviewSchema);

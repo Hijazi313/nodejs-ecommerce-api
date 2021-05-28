@@ -93,6 +93,8 @@ exports.readAllProducts = catchAsync(async (req, res, next) => {
     if (skip >= numOfProducts)
       return next(new AppError("This page does not exist", 404));
   }
+  // Explain Query for dev purpose
+  // const products = await query.explain();
 
   // EXECUTE QUERY
   const products = await query;

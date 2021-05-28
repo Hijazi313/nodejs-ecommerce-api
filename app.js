@@ -12,6 +12,7 @@ const hpp = require("hpp");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const productsRoute = require("./routes/productsRoute");
+const reviewRoute = require("./routes/reviewRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const userRoute = require("./routes/userRoute");
 
@@ -66,6 +67,7 @@ app.use(
 
 // Application Route handlers
 app.use("/api/v1/products", productsRoute);
+app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/categories", categoryRoute);
 app.use("/api/v1/users", userRoute);
 

@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const { default: slugify } = require("slugify");
 const productSchema = new Schema(
   {
     title: {
@@ -31,6 +32,10 @@ const productSchema = new Schema(
     ratingsAverage: {
       type: Number,
       default: 5.0,
+    },
+    slug: {
+      type: String,
+      lowercase: true,
     },
     totalRatings: {
       type: Number,
@@ -66,10 +71,27 @@ productSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 
+//
+productSchema.pre("save", function (next) {
+  this.slug = slugify(this.title, { lower: true, replacement: "_" });
+  //  if Document  is updated
+  if (this.isModified("title")) {
+    this.slug = slugify(this.title, { lower: true, replacement: "_" });
+    return next();
+  }
+  return next();
+});
+
+//
 productSchema.methods.increaseView = function () {
   this.views += 1;
   return;
 };
+
+// CREATE INDEXES
+productSchema.index({ views: -1 });
+productSchema.index({ slug: 1 });
+
 const Product = model("Product", productSchema);
 
 module.exports = Product;

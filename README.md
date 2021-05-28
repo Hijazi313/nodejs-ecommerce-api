@@ -18,7 +18,10 @@
   Json web token should be stored in a secure HTTP-only cookie. Here i am sending JWT as a cookie so that browser can then  save it in a more  secure way 
 
   ###  Parameter Pollution
-  Prevent parameter pollution on un some types.
+  Prevent parameter pollution on un some types.#
+
+  ### Aggregation pipeline 
+  Here i have used the amazing aggregation pipeline given to use by mongoose to automate many user reviews and ratings on products.
 
 ### Aliasing for most viewd products
 
