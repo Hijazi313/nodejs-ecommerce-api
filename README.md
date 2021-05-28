@@ -21,7 +21,7 @@
   Prevent parameter pollution on un some types.#
 
   ### Aggregation pipeline 
-  Here i have used the amazing aggregation pipeline given to use by mongoose to automate many user reviews and ratings on products.
+  Here i have used the amazing aggregation pipeline given to us by mongoose to automate many user reviews and ratings on products.
 
 ### Aliasing for most viewd products
 
