@@ -3,6 +3,8 @@ const Product = require("../models/productModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
+const { deleteOne } = require("./handlerFactory");
+
 exports.createProduct = catchAsync(async (req, res, next) => {
   const {
     title,
@@ -136,17 +138,7 @@ exports.readProduct = catchAsync(async (req, res, next) => {
 });
 
 // Delete Product
-
-exports.deleteProduct = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const product = await Product.findByIdAndRemove(id);
-  if (!product) {
-    return next(new AppError("Unable to find this product", 404));
-  } else {
-    return res.status(200).send({ status: "OK" });
-  }
-});
+exports.deleteProduct = deleteOne(Product);
 
 // Update Product
 exports.updateProduct = catchAsync(async (req, res, next) => {
