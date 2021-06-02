@@ -10,10 +10,11 @@ const {
   aliasMostViewd,
 } = require("../controllers/productController");
 const idCheck = require("../utils/idCheck");
+const { isCategory } = require("../controllers/categoriesController");
 const router = express.Router();
 
 // Create a Product
-router.route("/").post(protect, createProduct).get(readAllProducts);
+router.route("/").post(protect, isCategory, createProduct).get(readAllProducts);
 
 router.route("/most-viewed").get(aliasMostViewd, readAllProducts);
 

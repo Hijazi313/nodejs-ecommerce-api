@@ -28,3 +28,19 @@ exports.updateOne = (Model) =>
       },
     });
   });
+
+// Works with product and category
+exports.createOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const document = new Model(req.body);
+    const newDocument = await document.save();
+    if (!newDocument) {
+      nex(new AppError("Document can not be created", 424));
+    }
+    return res.status(201).send({
+      status: "OK",
+      data: {
+        document: newDocument,
+      },
+    });
+  });

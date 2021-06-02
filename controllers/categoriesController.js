@@ -1,29 +1,24 @@
 const Category = require("../models/categoryModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { deleteOne, updateOne } = require("./handlerFactory");
+const { deleteOne, updateOne, createOne } = require("./handlerFactory");
 
 // CREATE CATEGORIES_CONTROLLER
 // @METHOD POST
-exports.createCategory = catchAsync(async (req, res, next) => {
-  const { name, color, icon } = req.body;
-
-  let category = new Category({
-    name,
-    color,
-    icon,
-  });
-
-  category = await category.save();
-  if (!category) {
-    return res
-      .status(424)
-      .send({ status: "failed", message: "The category cannot be created" });
-  }
-  return res.status(201).send({ status: "OK", data: category });
-});
-
+exports.createCategory = createOne(Category);
 //
+
+// Check if Category exists
+exports.isCategory = catchAsync(async (req, res, next) => {
+  // Check if this category exists in Category collection
+  const isCategory = await Category.findById(req.body.category);
+  if (!isCategory) {
+    return next(
+      new AppError("This category does not exist in Category collection", 400)
+    );
+  }
+  next();
+});
 
 // GET ALL CATEGORIES
 exports.getCategories = catchAsync(async (req, res, next) => {

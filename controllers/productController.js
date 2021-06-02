@@ -1,55 +1,11 @@
-const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
-const { deleteOne, updateOne } = require("./handlerFactory");
+const { deleteOne, updateOne, createOne } = require("./handlerFactory");
 
-exports.createProduct = catchAsync(async (req, res, next) => {
-  const {
-    title,
-    shortDescription,
-    description,
-    price,
-    category,
-    image,
-    images,
-    brand,
-    countInStock,
-    isFeatured,
-  } = req.body;
-
-  // Check is this category exists in Category collection
-  const isCategory = await Category.findById(category);
-  if (!isCategory) {
-    return next(
-      new AppError("This category does not exist in Category collection", 400)
-    );
-  }
-
-  const product = new Product({
-    title,
-    shortDescription,
-    description,
-    price,
-    category,
-    image,
-    images,
-    brand,
-    countInStock,
-    isFeatured,
-  });
-  const newProduct = await product.save();
-  if (!newProduct) {
-    nex(new AppError("Product can not be created", 424));
-  }
-  return res.status(201).send({
-    status: "OK",
-    data: {
-      product: newProduct,
-    },
-  });
-});
+// Create Product
+exports.createProduct = createOne(Product);
 
 // READ ALL PRODUCTS
 
