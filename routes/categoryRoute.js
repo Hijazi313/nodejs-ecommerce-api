@@ -8,6 +8,7 @@ const {
   deleteCategory,
   getCategories,
   getCategory,
+  updateCategory,
 } = require("../controllers/categoriesController");
 
 router
@@ -18,6 +19,7 @@ router
 router
   .route("/:id")
   .get(getCategory)
+  .patch(protect, restrictTo("admin"), updateCategory)
   .delete(protect, restrictTo("user", "admin"), deleteCategory);
 
 module.exports = router;

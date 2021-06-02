@@ -1,7 +1,7 @@
 const Review = require("../models/reviewsModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { deleteOne } = require("./handlerFactory");
+const { deleteOne, updateOne } = require("./handlerFactory");
 
 exports.createReview = catchAsync(async (req, res, next) => {
   const newReview = new Review({
@@ -29,18 +29,6 @@ exports.readAllReview = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateReview = catchAsync(async (req, res, next) => {
-  const newReview = await Review.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!newReview) return next(new AppError("This Product does not exist", 404));
-  return res.status(200).json({
-    status: "OK",
-    data: {
-      review: newReview,
-    },
-  });
-});
+exports.updateReview = updateOne(Review);
 
 exports.deleteReview = deleteOne(Review);

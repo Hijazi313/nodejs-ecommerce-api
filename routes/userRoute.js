@@ -14,7 +14,9 @@ const {
   deleteMe,
   getAllUsers,
   updateMe,
+  updateUser,
 } = require("../controllers/userController");
+const restrictTo = require("../middlewares/restrictTo");
 
 const router = express.Router();
 
@@ -35,6 +37,9 @@ router
   .delete(protect, deleteMe);
 
 router.route("/").get(protect, getAllUsers);
-// select only title shortDescription _id and image
+
+// UPDATE USER ONLY FOR ADMIN
+// NOTE: DO not change or update password with this route
+router.route("/:id").patch(protect, restrictTo("admin"), updateUser);
 
 module.exports = router;

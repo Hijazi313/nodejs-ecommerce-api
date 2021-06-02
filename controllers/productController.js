@@ -3,7 +3,7 @@ const Product = require("../models/productModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
-const { deleteOne } = require("./handlerFactory");
+const { deleteOne, updateOne } = require("./handlerFactory");
 
 exports.createProduct = catchAsync(async (req, res, next) => {
   const {
@@ -141,19 +141,7 @@ exports.readProduct = catchAsync(async (req, res, next) => {
 exports.deleteProduct = deleteOne(Product);
 
 // Update Product
-exports.updateProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!product) return next(new AppError("This Product does not exist", 404));
-  return res.status(200).json({
-    status: "OK",
-    data: {
-      product,
-    },
-  });
-});
+exports.updateProduct = updateOne(Product);
 
 // Aliasing for most viewd Products
 exports.aliasMostViewd = catchAsync(async (req, res, next) => {

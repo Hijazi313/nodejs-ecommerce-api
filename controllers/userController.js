@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
+const { updateOne } = require("./handlerFactory");
 
 const filterObj = (obj, ...allowedFields) => {
   let newObj = {};
@@ -51,3 +52,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     data: { user: updatedUser },
   });
 });
+
+// TODO: make a route, only for admmin access
+// DO not change or update password with this
+exports.updateUser = updateOne(User);
