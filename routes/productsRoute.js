@@ -18,7 +18,7 @@ router.route("/").post(protect, isCategory, createProduct).get(readAllProducts);
 
 router.route("/most-viewed").get(aliasMostViewd, readAllProducts);
 
-// TODO: Relateg Products  route
+// TODO: Related Products  route
 // select only title shortDescription _id and image
 
 // Check if the provided is  in valid format
