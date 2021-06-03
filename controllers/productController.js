@@ -2,7 +2,7 @@ const Product = require("../models/productModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
-const { deleteOne, updateOne, createOne } = require("./handlerFactory");
+const { deleteOne, updateOne, createOne, getOne } = require("./handlerFactory");
 
 // Create Product
 exports.createProduct = createOne(Product);
@@ -71,27 +71,11 @@ exports.readAllProducts = catchAsync(async (req, res, next) => {
 
 // READ ONE PRODUCT
 
-exports.readProduct = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const product = await Product.findById(id)
-    .select("-image -isFeatured -shortDescription")
-    .populate("category");
-  if (!product) {
-    return next(new AppError("Unable to find this product", 404));
-  } else {
-    // Increase Signle product view
-    await product.increaseView();
-    product.save({ validateBeforeSave: false });
-
-    return res.status(200).send({
-      message: "OK",
-      data: {
-        product,
-      },
-    });
-  }
-});
+exports.readProduct = getOne(
+  Product,
+  { path: "category" },
+  "-image -isFeatured -shortDescription"
+);
 
 // Delete Product
 exports.deleteProduct = deleteOne(Product);

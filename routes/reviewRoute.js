@@ -7,9 +7,18 @@ const {
   setReviewBody,
 } = require("../controllers/reviewsController");
 const protect = require("../middlewares/protect");
+const restrictTo = require("../middlewares/restrictTo");
 
 const router = express.Router();
 
-router.route("/").get(readAllReview).post(protect, setReviewBody, createReview);
-router.route("/:id").patch(protect, updateReview).delete(protect, deleteReview);
+router
+  .route("/")
+  .get(readAllReview)
+  .post(protect, restrictTo("user"), setReviewBody, createReview);
+router
+  .route("/:id")
+  .patch(protect, restrictTo("user"), updateReview)
+  .delete(protect, deleteReview);
+
+// TODO: Get Reviews on asingle Product Route
 module.exports = router;

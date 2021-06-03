@@ -44,3 +44,29 @@ exports.createOne = (Model) =>
       },
     });
   });
+
+// READ ONE
+exports.getOne = (Model, populateOptions, ...selectedFields) =>
+  catchAsync(async (req, res, next) => {
+    let query = Model.findById(req.params.id);
+    selectedFields && (query = query.select(selectedFields.flat().join(" ")));
+    populateOptions && (query = query.populate(populateOptions));
+
+    console.log(await Model.findById(req.params.id));
+    const doc = await query;
+
+    if (!doc) {
+      return next(new AppError("Unable to find this Document", 404));
+    } else {
+      // Increase Signle product view
+      await doc.increaseView();
+      doc.save({ validateBeforeSave: false });
+
+      return res.status(200).send({
+        message: "OK",
+        data: {
+          document: doc,
+        },
+      });
+    }
+  });

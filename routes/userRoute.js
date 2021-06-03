@@ -15,6 +15,7 @@ const {
   getAllUsers,
   updateMe,
   updateUser,
+  readUser,
 } = require("../controllers/userController");
 const restrictTo = require("../middlewares/restrictTo");
 
@@ -40,6 +41,10 @@ router.route("/").get(protect, getAllUsers);
 
 // UPDATE USER ONLY FOR ADMIN
 // NOTE: DO not change or update password with this route
-router.route("/:id").patch(protect, restrictTo("admin"), updateUser);
+// NOTE: Write separate tests for admin role based actions
+router
+  .route("/:id")
+  .get(protect, restrictTo("admin"), readUser)
+  .patch(protect, restrictTo("admin"), updateUser);
 
 module.exports = router;
