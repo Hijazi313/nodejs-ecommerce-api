@@ -36,6 +36,8 @@ const reviewSchema = new Schema(
   }
 );
 
+// Combined Index to ensure that one user and one product can have one unique index
+reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 // reviewSchema.virtual("id").get(function () {
 //   return this._id.toHexString();
 // });

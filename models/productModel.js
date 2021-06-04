@@ -32,6 +32,9 @@ const productSchema = new Schema(
     ratingsAverage: {
       type: Number,
       default: 5.0,
+      min: [1, "Rating must be above 1.0"],
+      max: [5, "Rating must be above 5.0"],
+      set: (val) => Math.round(val * 10) / 10,
     },
     slug: {
       type: String,
