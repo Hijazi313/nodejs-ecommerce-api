@@ -1,7 +1,13 @@
 const Category = require("../models/categoryModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { deleteOne, updateOne, createOne, getOne } = require("./handlerFactory");
+const {
+  deleteOne,
+  updateOne,
+  createOne,
+  getOne,
+  getAll,
+} = require("./handlerFactory");
 
 // CREATE CATEGORIES_CONTROLLER
 // @METHOD POST
@@ -21,11 +27,7 @@ exports.isCategory = catchAsync(async (req, res, next) => {
 });
 
 // GET ALL CATEGORIES
-exports.getCategories = catchAsync(async (req, res, next) => {
-  const category = await Category.find();
-
-  return res.status(200).send({ status: "OK", data: category });
-});
+exports.getCategories = getAll(Category);
 
 // READ One Category
 exports.getCategory = getOne(Category);

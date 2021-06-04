@@ -15,10 +15,16 @@ router
   .route("/")
   .get(readAllReview)
   .post(protect, restrictTo("user"), setReviewBody, createReview);
+
+// Get Reviews on a single Product Route
+router.route("/:productId").get(readAllReview);
+
+// NOTE: This will make all next routes protected after this middleware
+router.use(protect);
+
 router
   .route("/:id")
-  .patch(protect, restrictTo("user"), updateReview)
-  .delete(protect, deleteReview);
+  .patch(restrictTo("user"), updateReview)
+  .delete(deleteReview);
 
-// TODO: Get Reviews on asingle Product Route
 module.exports = router;

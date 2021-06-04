@@ -1,5 +1,6 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const APIFeatures = require("./../utils/apiFeatures");
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -66,6 +67,35 @@ exports.getOne = (Model, populateOptions, ...selectedFields) =>
         message: "OK",
         data: {
           document: doc,
+        },
+      });
+    }
+  });
+
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
+    console.log(req.params);
+    // IF IT'S Reviews Route
+    let filter = {};
+    if (req.params.productId) filter = { product: req.params.productId };
+    // EXECUTE QUERY
+    const features = new APIFeatures(Model.find(filter), req.query)
+      .filter()
+      .paginate()
+      .limitfields()
+      .sort();
+
+    // Explain Query for dev purpose
+    // const products = await features.query.explain();
+    const doc = await features.query;
+
+    if (!doc) {
+      return next(new AppError("Unable to find Documents", 424));
+    } else {
+      return res.status(200).send({
+        message: "OK",
+        data: {
+          documents: doc,
         },
       });
     }

@@ -11,10 +11,14 @@ const {
 } = require("../controllers/productController");
 const idCheck = require("../utils/idCheck");
 const { isCategory } = require("../controllers/categoriesController");
+const restrictTo = require("../middlewares/restrictTo");
 const router = express.Router();
 
 // Create a Product
-router.route("/").post(protect, isCategory, createProduct).get(readAllProducts);
+router
+  .route("/")
+  .post(protect, restrictTo("admin"), isCategory, createProduct)
+  .get(readAllProducts);
 
 router.route("/most-viewed").get(aliasMostViewd, readAllProducts);
 
@@ -28,7 +32,7 @@ router.param("id", idCheck);
 router
   .route("/:id")
   .get(readProduct)
-  .delete(deleteProduct)
-  .patch(updateProduct);
+  .delete(protect, restrictTo("admin"), deleteProduct)
+  .patch(protect, restrictTo("admin"), updateProduct);
 
 module.exports = router;

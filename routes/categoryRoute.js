@@ -2,7 +2,6 @@ const express = require("express");
 const restrictTo = require("../middlewares/restrictTo");
 const protect = require("../middlewares/protect");
 
-const router = express.Router();
 const {
   createCategory,
   deleteCategory,
@@ -10,6 +9,8 @@ const {
   getCategory,
   updateCategory,
 } = require("../controllers/categoriesController");
+
+const router = express.Router();
 
 router
   .route("/")

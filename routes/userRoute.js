@@ -27,24 +27,28 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/forgotpassword", forgotPassword);
 router.patch("/resetpassword/:token", resetPassword);
-router.patch("/updatepassword", protect, updatePassword);
+
+// NOTE: This will make all next routes protected after this middleware
+router.use(protect);
+
+// IT's a protected Route
+router.patch("/updatepassword", updatePassword);
 
 // @GET THE PROFILE OF THE CURRENT USER
 // IF the user is logged in only then he can access his profile and perform different actions
-router
-  .route("/me")
-  .get(protect, myProfile)
-  .patch(protect, updateMe)
-  .delete(protect, deleteMe);
+// IT's a protected Route
+router.route("/me").get(myProfile).patch(updateMe).delete(deleteMe);
 
-router.route("/").get(protect, getAllUsers);
+router.route("/").get(getAllUsers);
 
 // UPDATE USER ONLY FOR ADMIN
+
+// NOTE: Users with the role of admin can visit after this middleware
+router.use(restrictTo("admin"));
+
+// NOTE: ONLY User with the role of admin are can visit these routes
 // NOTE: DO not change or update password with this route
 // NOTE: Write separate tests for admin role based actions
-router
-  .route("/:id")
-  .get(protect, restrictTo("admin"), readUser)
-  .patch(protect, restrictTo("admin"), updateUser);
+router.route("/:id").get(readUser).patch(updateUser);
 
 module.exports = router;

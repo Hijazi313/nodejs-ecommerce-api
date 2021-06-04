@@ -1,7 +1,7 @@
 const Review = require("../models/reviewsModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { deleteOne, updateOne, createOne } = require("./handlerFactory");
+const { deleteOne, updateOne, createOne, getAll } = require("./handlerFactory");
 
 exports.setReviewBody = catchAsync(async (req, res, next) => {
   const body = { ...req.body, user: req.user._id, userName: req.user.fullName };
@@ -10,16 +10,9 @@ exports.setReviewBody = catchAsync(async (req, res, next) => {
 });
 
 exports.createReview = createOne(Review);
-exports.readReview = catchAsync(async (req, res, next) => {});
-exports.readAllReview = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find();
-  return res.status(200).json({
-    status: "OK",
-    data: {
-      reviews,
-    },
-  });
-});
+
+// TODO: Make it to work with only one product
+exports.readAllReview = getAll(Review);
 
 exports.updateReview = updateOne(Review);
 
